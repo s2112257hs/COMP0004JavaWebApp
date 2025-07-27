@@ -1,50 +1,90 @@
 package uk.ac.ucl.model;
 
-import java.io.Reader;
-import java.io.FileReader;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 
-public class Model
-{
-  // The example code in this class should be replaced by your Model class code.
-  // The data should be stored in a suitable data structure.
+public class Model {
 
-  public List<String> getPatientNames()
-  {
-    return readFile("data/patients100.csv");
+private static Model instance; // Singleton instance
+
+private List<Note> notes;
+private final String notesDataFilePath;
+private final ObjectMapper objectMapper;
+
+// Private constructor for singleton
+Model(String notesDataFilePath) {
+  this.notesDataFilePath = notesDataFilePath;
+  this.objectMapper = new ObjectMapper();
+  this.notes = new ArrayList<>();
+  loadNotesFromFile();
+}
+
+// Static method to retrieve the singleton instance
+public static Model getInstance() {
+  if (instance == null) {
+    // Use the correct path to your JSON file
+    instance = new Model("data/notes.json");
   }
+  return instance;
+}
 
-  // This method illustrates how to read csv data from a file.
-  // The data files are stored in the root directory of the project (the directory your project is in),
-  // in the directory named data.
-  public List<String> readFile(String fileName)
-  {
-    List<String> data = new ArrayList<>();
-
-    try (Reader reader = new FileReader(fileName);
-         CSVParser csvParser = new CSVParser(reader, CSVFormat.DEFAULT))
-    {
-      for (CSVRecord csvRecord : csvParser)
-      {
-        // The first row of the file contains the column headers, so is not actual data.
-        data.add(csvRecord.get(0));
-      }
-    } catch (IOException e)
-    {
-      e.printStackTrace();
+// Load notes from the JSON file
+private void loadNotesFromFile() {
+  try {
+    File file = new File(notesDataFilePath);
+    if (file.exists()) {
+      this.notes = new ArrayList<>(Arrays.asList(objectMapper.readValue(file, Note[].class)));
+    } else {
+      this.notes = new ArrayList<>();
     }
-    return data;
+  } catch (IOException e) {
+    e.printStackTrace();
   }
+}
 
-  // This also returns dummy data. The real version should use the keyword parameter to search
-  // the data and return a list of matching items.
-  public List<String> searchFor(String keyword)
-  {
-    return List.of("Search keyword is: "+ keyword, "result1", "result2", "result3");
+// Add a new note to the list and update the JSON file
+public void addNewNote(Note newNote) {
+  this.notes.add(newNote);
+  saveNotesToFile(); // Save changes to the file
+  loadNotesFromFile(); // Reload the notes list from the JSON file
+}
+
+// Save the notes list back to the JSON file
+private void saveNotesToFile() {
+  try {
+    objectMapper.writeValue(new File(notesDataFilePath), this.notes);
+  } catch (IOException e) {
+    e.printStackTrace();
+    throw new RuntimeException("Failed to save notes to file.");
   }
+}
+
+public List<Note> getNotes() {
+  loadNotesFromFile();  // ✅ Always reload from file before returning
+  return notes;
+}
+
+public boolean deleteNoteByTitle(String title) {
+  boolean removed = notes.removeIf(note -> note.getTitle().equalsIgnoreCase(title));
+  if (removed) {
+    saveNotesToFile();
+  }
+  return removed;
+}
+
+public boolean updateNote(String originalTitle, String newTitle, String newContent) {
+  for (Note note : notes) {
+    if (note.getTitle().equals(originalTitle)) {
+      note.setTitle(newTitle);
+      note.setContents(newContent);
+      saveNotesToFile();  // ✅ Save changes to JSON file
+      return true;
+    }
+  }
+  return false;
+}
 }
