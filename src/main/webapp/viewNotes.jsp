@@ -1,57 +1,65 @@
+<!-- viewNotes -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="uk.ac.ucl.model.Note" %>
 <%@ page import="java.util.List" %>
 <html>
 <head>
     <title>Your Notes</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .button { padding: 8px 16px; margin: 5px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
-        .button:hover { background-color: #0056b3; }
-        input[type="text"] { padding: 5px; margin-right: 10px; }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <h1>Your Notes</h1>
 
 <!-- Search form -->
-<form method="get" action="viewNotes">
+<form method="get" action="viewNotes" class="search-form">
     <input type="text" name="searchQuery" placeholder="Search notes..." value="${param.searchQuery}" />
-    <button type="submit">Search</button>
+    <button type="submit" class="button primary">Search</button>
 </form>
+
 
 <!-- Sorting buttons -->
 <form method="get" action="viewNotes">
-    <button type="submit" name="sortBy" value="titleAsc">Sort by Title (Ascending)</button>
-    <button type="submit" name="sortBy" value="titleDesc">Sort by Title (Descending)</button>
-    <button type="submit" name="sortBy" value="sizeAsc">Sort by Size (Shortest to Longest)</button>
-    <button type="submit" name="sortBy" value="sizeDesc">Sort by Size (Longest to Shortest)</button>
+    <div class="button-row">
+        <button type="submit" name="sortBy" value="titleAsc" class="button secondary">Title ↑</button>
+        <button type="submit" name="sortBy" value="titleDesc" class="button secondary">Title ↓</button>
+        <button type="submit" name="sortBy" value="sizeAsc" class="button secondary">Size ↑</button>
+        <button type="submit" name="sortBy" value="sizeDesc" class="button secondary">Size ↓</button>
+        <a href="addNote.jsp" class="button primary">Add New Note</a>
+    </div>
 </form>
 
 <!-- Notes list -->
-<ul>
+<%
+    List<Note> notes = (List<Note>) request.getAttribute("notes");
+    if (notes == null || notes.isEmpty()) {
+%>
+<p>No notes available. Please add a new Note.</p>
+<%
+} else {
+%>
+<div class="notes-container">
     <%
-        // Get the notes from the request attribute
-        List<Note> notes = (List<Note>) request.getAttribute("notes");
-        if (notes == null || notes.isEmpty()) {
-    %>
-    <p>No notes available. Please add a new Note.</p>
-    <%
-    } else {
         for (Note note : notes) {
     %>
-    <li>
-        <a href="viewSingleNote?title=<%= note.getTitle() %>">
-            <%= note.getTitle() %>
-        </a>
-    </li>
+    <div class="note-card">
+        <h2>
+            <a href="viewSingleNote?id=<%= note.getId() %>">
+                <%= note.getTitle() %>
+            </a>
+        </h2>
+        <p><%= note.getContents().length() > 100
+                ? note.getContents().substring(0, 100) + "..."
+                : note.getContents() %></p>
+    </div>
     <%
-            }
         }
     %>
-</ul>
+</div>
+<%
+    }
+%>
 
 <br/>
-<a href="addNote.jsp" class="button">Add New Note</a>
+
 </body>
 </html>

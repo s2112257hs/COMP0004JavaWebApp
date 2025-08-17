@@ -18,9 +18,9 @@ private void loadNotesFromFile() {
     try (BufferedReader br = new BufferedReader(new FileReader(notesFilePath))) {
         String line;
         while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",", 2);
-            if (parts.length == 2) {
-                notes.add(new Note(parts[0], parts[1])); // Note(title, content)
+            String[] parts = line.split(",", 3);
+            if (parts.length == 3) {
+                notes.add(new Note(parts[0], parts[1], parts[2])); // Note(title, content)
             }
         }
     } catch (IOException e) {
@@ -41,14 +41,14 @@ public Note getNoteByTitle(String title) {
     return null;
 }
 
-public void addNote(String title, String content) {
-    notes.add(new Note(title, content));
+public void addNote(String title, String content, String id) {
+    notes.add(new Note(title, content, id));
     saveNotesToFile();
 }
 
 public void updateNote(String title, String newContent) {
     for (Note note : notes) {
-        if (note.getTitle().equalsIgnoreCase(title)) {
+        if (note.getId().equalsIgnoreCase(title)) {
             note.setContents(newContent);
             saveNotesToFile();
             return;
@@ -56,8 +56,8 @@ public void updateNote(String title, String newContent) {
     }
 }
 
-public void deleteNote(String title) {
-    notes.removeIf(note -> note.getTitle().equalsIgnoreCase(title));
+public void deleteNote(String id) {
+    notes.removeIf(note -> note.getId().equals(id));
     saveNotesToFile();
 }
 

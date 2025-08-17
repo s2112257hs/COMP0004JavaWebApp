@@ -1,8 +1,10 @@
+<!-- addNote -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Add New Note</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -20,9 +22,10 @@
 
     <label for="content">Content:</label><br>
     <textarea id="content" name="content" rows="5" cols="50" required></textarea><br><br>
-
-    <button type="submit" class="button">Save Note</button>
-    <button type="button" class="button" onclick="window.location.href='viewNotes'">Cancel</button>
+    <div class="button-row">
+        <button type="submit" class="button primary">Save Note</button>
+        <button type="button" class="button secondary" onclick="window.location.href='viewNotes'">Cancel</button>
+    </div>
 </form>
 </body>
 </html>

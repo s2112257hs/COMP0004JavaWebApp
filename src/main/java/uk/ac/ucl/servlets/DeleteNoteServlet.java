@@ -15,10 +15,10 @@ public class DeleteNoteServlet extends HttpServlet {
 
 // GET: Delete the note by title
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String title = request.getParameter("title");
+    String id = request.getParameter("id");
     Model model = ModelFactory.getModel();
 
-    boolean deleted = model.deleteNoteByTitle(title);
+    boolean deleted = model.deleteNoteById(id);
     if (deleted) {
         // Redirect to the notes list page after deletion
         response.sendRedirect("viewNotes");

@@ -18,12 +18,12 @@ public class EditNoteServlet extends HttpServlet {
 
 // GET: Load the note data and display the edit form
 protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String title = request.getParameter("title");
+    String id = request.getParameter("id");
     Model model = ModelFactory.getModel();
     List<Note> notes = model.getNotes();
     Note selectedNote = null;
     for (Note note : notes) {
-        if (note.getTitle().equals(title)) {
+        if (note.getId().equals(id)) {
             selectedNote = note;
             break;
         }
@@ -39,12 +39,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 
 // POST: Process the updated note data and save changes
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String originalTitle = request.getParameter("originalTitle");
+    String id = request.getParameter("id");
     String newTitle = request.getParameter("title");
     String newContent = request.getParameter("content");
 
+    if (id == null || newTitle == null || newContent == null) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters.");
+    }
+
     Model model = ModelFactory.getModel();
-    boolean updated = model.updateNote(originalTitle, newTitle, newContent);
+    boolean updated = model.updateNote(id, newTitle, newContent);
 
     if (updated) {
         response.sendRedirect("viewNotes");  // ✅ Redirect to viewNotes after saving

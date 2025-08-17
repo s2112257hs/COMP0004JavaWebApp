@@ -15,8 +15,8 @@ public Note() {
 
 // Constructor with parameters
 @JsonCreator
-public Note(@JsonProperty("title") String title, @JsonProperty("contents") String contents) {
-    this.id = UUID.randomUUID().toString();  // Automatically generate a unique ID
+public Note(@JsonProperty("title") String title, @JsonProperty("contents") String contents, @JsonProperty("id") String id) {
+    this.id = id;
     this.title = title;
     this.contents = contents;
 }
@@ -26,10 +26,6 @@ public String getId() {
     return id;
 }
 
-// Setter for ID (useful for deserialization if needed)
-public void setId(String id) {
-    this.id = id;
-}
 
 // Getter and setter for title
 public String getTitle() {

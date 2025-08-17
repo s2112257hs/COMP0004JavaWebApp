@@ -9,6 +9,7 @@ import uk.ac.ucl.model.ModelFactory;
 import uk.ac.ucl.model.Note;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet("/saveNote")
 public class SaveNoteServlet extends HttpServlet {
@@ -17,9 +18,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     // Get data from the form
     String title = request.getParameter("title");
     String content = request.getParameter("content");
-
+    String id = UUID.randomUUID().toString();
     // Create a new Note object using the constructor
-    Note newNote = new Note(title, content);
+    Note newNote = new Note(title, content, id);
 
     try {
         // Get the Model instance (this should not be null)

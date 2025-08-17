@@ -68,17 +68,11 @@ public List<Note> getNotes() {
   return notes;
 }
 
-public boolean deleteNoteByTitle(String title) {
-  boolean removed = notes.removeIf(note -> note.getTitle().equalsIgnoreCase(title));
-  if (removed) {
-    saveNotesToFile();
-  }
-  return removed;
-}
 
-public boolean updateNote(String originalTitle, String newTitle, String newContent) {
+
+public boolean updateNote(String id, String newTitle, String newContent) {
   for (Note note : notes) {
-    if (note.getTitle().equals(originalTitle)) {
+    if (id.equals(note.getId())) {
       note.setTitle(newTitle);
       note.setContents(newContent);
       saveNotesToFile();  // ✅ Save changes to JSON file
@@ -86,5 +80,13 @@ public boolean updateNote(String originalTitle, String newTitle, String newConte
     }
   }
   return false;
+}
+
+public boolean deleteNoteById(String id) {
+  boolean removed = notes.removeIf(note -> note.getId().equals(id));
+  if (removed) {
+    saveNotesToFile();
+  }
+  return removed;
 }
 }
