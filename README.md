@@ -1,4 +1,4 @@
-# Java Notes Webapp 📝
+# Java Notes Webapp 
 
 A simple **note-taking web application** built with **Java Servlets,
 JSP, and JSON persistence**. Developed as part of university coursework
@@ -7,7 +7,7 @@ and web UI development**.
 
 ------------------------------------------------------------------------
 
-## 🚀 Features
+##  Features
 
 -   Create, edit, delete, and search notes via a clean JSP interface
 -   Notes are **persisted in JSON files**, so data is saved across
@@ -17,7 +17,7 @@ and web UI development**.
 
 ------------------------------------------------------------------------
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 -   **Backend:** Java Servlets (Jakarta EE), JSON persistence
 -   **Frontend:** JSP with HTML, CSS
@@ -25,7 +25,7 @@ and web UI development**.
 
 ------------------------------------------------------------------------
 
-## 📌 Future Improvements
+##  Future Improvements
 
 -   Add user authentication for personal note collections
 -   Migrate from JSON to a relational database for scalability
